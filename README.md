@@ -5,3 +5,8 @@
 1. First
 2. Second
 3. So on
+
+| First Header  | Second Header |
+| ------------- | ------------- |
+| Content Cell  | Content Cell  |
+| Content Cell  | Content Cell  |
