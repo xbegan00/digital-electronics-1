@@ -1,3 +1,4 @@
 # Digital-Electronics-1
-###VUT-FEKT-BPC-TLI/01
-[I'm an inline-style link](https://www.google.com)
+### VUT-FEKT-BPC-TLI/01
+[GOOGLE](https://www.google.com) :smile:
+
