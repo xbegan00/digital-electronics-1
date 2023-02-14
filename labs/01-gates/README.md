@@ -17,8 +17,7 @@ begin
     			(not(c_i and (not(b_i) and a_i)))); -- MODIFY THIS FUNCTION
     f_nor_o  <= (not(b_i or not(a_i))) or 
     			(not(not(c_i) or b_i or not(a_i)));  -- MODIFY THIS FUNCTION
-end architecture dataflow;
-```
+end architecture dataflow;```
 
 3. Complete table with logic functions' values:
 
@@ -40,8 +39,8 @@ end architecture dataflow;
 
 1. Screenshot with simulated time waveforms. Always display all inputs and outputs (display the inputs at the top of the image, the outputs below them) at the appropriate time scale!
 
-   ![Logic function](images/firstlaw.png)
+   ![your figure]()
 
 2. Link to your public EDA Playground example:
 
-   [https://www.edaplayground.com/x/p884](https://www.edaplayground.com/x/p884)
+   [https://www.edaplayground.com/...](https://www.edaplayground.com/...)
