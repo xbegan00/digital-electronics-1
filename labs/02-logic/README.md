@@ -4,7 +4,7 @@
 Fill the table with right value:
 
 | **Dec. equivalent** | **B[1]**	| **B[0]**	| **A[1]** | **A[0]**	| **B is greater than A** | **B equals A** | **B is less than A** |
-| :-: | :-: | :-: | :-: | :-: | :-: |
+| :-: | :-: | :-: | :-: | :-: | :-: | :-: | :-: |
 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
