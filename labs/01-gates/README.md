@@ -17,7 +17,8 @@ begin
     			(not(c_i and (not(b_i) and a_i)))); -- MODIFY THIS FUNCTION
     f_nor_o  <= (not(b_i or not(a_i))) or 
     			(not(not(c_i) or b_i or not(a_i)));  -- MODIFY THIS FUNCTION
-end architecture dataflow;```
+end architecture dataflow;
+```vhdl
 
 3. Complete table with logic functions' values:
 
