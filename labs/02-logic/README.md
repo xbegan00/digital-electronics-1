@@ -1,4 +1,4 @@
-# Lab 2: INSERT_YOUR_FIRSTNAME INSERT_YOUR_LASTNAME
+# Lab 2: Mojmir Began
 ## Preparation for Lab 2:
 
 Fill the table with right value:
