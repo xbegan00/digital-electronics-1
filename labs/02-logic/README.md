@@ -1,4 +1,4 @@
-# Lab 2: Mojmir Began
+# Lab 2: Mojmír Begán
 ## Preparation for Lab 2:
 
 Fill the table with right value:
