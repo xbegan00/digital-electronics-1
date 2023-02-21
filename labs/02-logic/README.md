@@ -42,6 +42,9 @@ Fill the table with right value:
    Less than:
 
    ![K-maps](images/Less1.png)
+   
+   Equations:
+   
    ![Logic functions](images/rovnice.png)
 
 ### 4-bit comparator
