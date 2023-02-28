@@ -26,7 +26,7 @@ architecture Behavioral of tb_mux_3bit_4to1 is
     signal s_c           : std_logic_vector(3 - 1 downto 0);
     signal s_d           : std_logic_vector(3 - 1 downto 0);
     signal s_f           : std_logic_vector(3 - 1 downto 0);
-    signal s_sel           : std_logic_vector(3 - 1 downto 0);
+    signal s_sel         : std_logic_vector(2 - 1 downto 0);
     
 begin
 -- Connecting testbench signals with mux_3bit_4to1
@@ -38,7 +38,7 @@ begin
             c           => s_c,
             d           => s_d,
             f           => s_f,
-            sel           => s_sel
+            sel         => s_sel
     );
 
     --------------------------------------------------------
@@ -53,28 +53,36 @@ begin
         report "Stimulus process started";
 		
         -- First test case ...
-        s_b <= "1001"; s_a <= "0101"; wait for 100 ns;
+        
+        s_a <= "100"; s_b <= "111"; s_c <= "101"; s_d <= "110"; s_sel <= "00"; wait for 100 ns;
         -- ... and its expected outputs
-        assert ((s_B_greater_A = '1') and
-                (s_B_equals_A  = '0') and
-                (s_B_less_A    = '0'))
+        assert (s_sel = "00")
         -- If false, then report an error
         -- If true, then do not report anything
         report "Input combination 00, 00 FAILED" severity error;
-
-
-        -- WRITE OTHER TEST CASES HERE
-        s_b <= "0000"; s_a <= "0100"; wait for 100 ns;
-         assert ((s_B_greater_A = '0') and
-                (s_B_equals_A  = '0') and
-                (s_B_less_A    = '1'))
+        
+        
+        s_a <= "100"; s_b <= "111"; s_c <= "101"; s_d <= "110"; s_sel <= "01"; wait for 100 ns;
+        -- ... and its expected outputs
+        assert (s_sel = "01")
         -- If false, then report an error
         -- If true, then do not report anything
-        report "Input combination 00, 01 FAILED" severity error;
+        report "Input combination 01, 01 FAILED" severity error;
         
-        s_b <= "0000"; s_a <= "1000"; wait for 100 ns;
-         assert ((s_B_greater_A = '0') and
-                (s_B_equals_A  = '0') and
-                (s_B_less_A    = '1'))
-        -- If false, then report an
+       
+        s_a <= "100"; s_b <= "111"; s_c <= "101"; s_d <= "110"; s_sel <= "10"; wait for 100 ns;
+        -- ... and its expected outputs
+        assert (s_sel = "10")
+        -- If false, then report an error
+        -- If true, then do not report anything
+        report "Input combination 10, 10 FAILED" severity error;
+       
+        s_a <= "100"; s_b <= "111"; s_c <= "101"; s_d <= "110"; s_sel <= "11"; wait for 100 ns;
+        -- ... and its expected outputs
+        assert (s_sel = "11")
+        -- If false, then report an error
+        -- If true, then do not report anything
+        report "Input combination 11, 11 FAILED" severity error;
+        
+    end process p_stimulus;
 end Behavioral;

@@ -20,12 +20,12 @@ use IEEE.STD_LOGIC_1164.ALL;
 
 entity mux_3bit_4to1 is
  port(
-        a     : in  std_logic_vector(3 - 1 downto 0);
-        b     : in  std_logic_vector(3 - 1 downto 0);
-        c     : in  std_logic_vector(3 - 1 downto 0);
-        d     : in  std_logic_vector(3 - 1 downto 0);-- COMPLETE THE ENTITY DECLARATION
-        sel   : in  std_logic_vector(2 - 1 downto 0);
-        f    : out std_logic
+        a       : in  std_logic_vector(3 - 1 downto 0);
+        b       : in  std_logic_vector(3 - 1 downto 0);
+        c       : in  std_logic_vector(3 - 1 downto 0);
+        d       : in  std_logic_vector(3 - 1 downto 0);-- COMPLETE THE ENTITY DECLARATION
+        sel     : in  std_logic_vector(2 - 1 downto 0);
+        f       : out std_logic_vector(3 - 1 downto 0)
     );
 end mux_3bit_4to1;
 
@@ -34,6 +34,6 @@ begin
     f <=    a when (sel = "00") else
             b when (sel = "01") else
             c when (sel = "10") else
-            d;                 -- All other combinations
+            d;                
 
 end Behavioral;

@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Webtalk v2020.2 (64-bit)
+# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
+# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+# Start of session at: Tue Feb 28 01:51:39 2023
+# Process ID: 15444
+# Current directory: E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/03-vivado/multiplexer/multiplexer.sim/sim_1/behav/xsim
+# Command line: wbtcv.exe -mode batch -source E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/03-vivado/multiplexer/multiplexer.sim/sim_1/behav/xsim/xsim.dir/mux_3bit_4to1_behav/webtalk/xsim_webtalk.tcl -notrace
+# Log file: E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/03-vivado/multiplexer/multiplexer.sim/sim_1/behav/xsim/webtalk.log
+# Journal file: E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/03-vivado/multiplexer/multiplexer.sim/sim_1/behav/xsim\webtalk.jou
+#-----------------------------------------------------------
+source E:/SCHOOL/2022-2023/LETNY -notrace
