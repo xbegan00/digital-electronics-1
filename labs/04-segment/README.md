@@ -92,3 +92,7 @@ The Nexys A7 board provides two four-digit common anode seven-segment LED displa
 3. Screenshot with simulated time waveforms for LED(7:4). Always display all inputs and outputs (display the inputs at the top of the image, the outputs below them) at the appropriate time scale!
 
    ![Simulation](images/simulation_top.jpg)
+   
+Rest of signal
+
+   ![Simulation](images/simulation_top1.jpg)
