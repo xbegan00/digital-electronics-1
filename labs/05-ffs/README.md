@@ -48,11 +48,31 @@
 ```vhdl
 architecture Behavioral of jk_ff_rst is
 
-    -- WRITE YOUR CODE HERE
+    signal sig_q : std_logic;
+begin
+    p_jk_ff_rst : process (clk)
+    begin
+        if rising_edge(clk) then
+
+        -- WRITE YOUR CODE HERE
+            if (rst = '1') then
+                sig_q <= '0';
+            elsif (j = '0' and  k_bar  = '1') then
+                sig_q <= '0'; 
+            elsif (j = '1' and  k_bar  = '0') then
+                sig_q <= '1';    
+            elsif (j = '0' and  k_bar  = '0') then
+                sig_q <= sig_q;                
+            elsif (j = '1' and k_bar  = '1') then
+                sig_q <= not sig_q;
+            end if;    
+        end if;
+    end process p_jk_ff_rst;
 
     -- Output ports are permanently connected to local signal
     q     <= sig_q;
     q_bar <= not sig_q;
+
 end architecture Behavioral;
 ```
 
