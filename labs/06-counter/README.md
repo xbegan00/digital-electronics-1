@@ -1,4 +1,4 @@
-# Lab 6: INSERT_YOUR_FIRSTNAME INSERT_YOUR_LASTNAME
+# Lab 6: Mojmir Began
 ## Pre-Lab preparation
 
 The Nexys A7 board provides five push buttons for user applications.
