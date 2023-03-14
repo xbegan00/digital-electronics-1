@@ -30,10 +30,8 @@ architecture behavioral of top is
   signal sig_ff3 : std_logic;
 
   -- WRITE YOUR CODE HERE
-  signal sig_d0 : std_logic;
-  signal sig_d1 : std_logic;
-  signal sig_d2 : std_logic;
-  signal sig_d3 : std_logic;
+  signal sig_data : std_logic;
+  
   
 
 begin
@@ -46,7 +44,7 @@ begin
           rst => BTNC,
           -- WRITE YOUR CODE HERE
           q   => sig_ff0,
-          d   => sig_d0
+          d   => sig_data
       );
 
   d_ff_1 : entity work.d_ff_rst
@@ -55,7 +53,7 @@ begin
           rst => BTNC,
           -- WRITE YOUR CODE HERE
           q   => sig_ff1,
-          d   => sig_d1
+          d   => sig_data
       );
       
 -- PUT OTHER TWO FLIP-FLOP INSTANCES HERE
@@ -65,7 +63,7 @@ begin
           rst => BTNC,
           -- WRITE YOUR CODE HERE
           q   => sig_ff2,
-          d   => sig_d2            
+          d   => sig_data     
       );
 
   d_ff_3 : entity work.d_ff_rst
@@ -74,7 +72,7 @@ begin
           rst => BTNC,
           -- WRITE YOUR CODE HERE
           q   => sig_ff3,
-          d   => sig_d3          
+          d   => sig_data          
       );
    
   -- Display input value on LEDs
@@ -83,14 +81,7 @@ begin
       LED(1) <= sig_ff1;
       LED(2) <= sig_ff2;
       LED(3) <= sig_ff3;  
-      sig_d0 <= '1' when (SW(0) = '1') else
-                '0';
-      sig_d1 <= '1' when (SW(0) = '1') else
-                '0';
-      sig_d2 <= '1' when (SW(0) = '1') else
-                '0';
-      sig_d3 <= '1' when (SW(0) = '1') else
-                '0';
-            
+      sig_data <= '1' when (SW(0) = '1') else
+                '0';           
 
 end architecture behavioral;

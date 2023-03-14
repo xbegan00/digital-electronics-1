@@ -52,7 +52,7 @@ begin
         clk   => sig_clk_100MHz,
         rst   => sig_rst,
         j     => sig_data,
-        k_bar     => sig_data,
+        k_bar => sig_data,
         q     => sig_jkq,
         q_bar => sig_jkq_bar
     );
