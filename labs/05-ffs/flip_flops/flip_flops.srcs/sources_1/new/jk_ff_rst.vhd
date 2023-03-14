@@ -10,16 +10,18 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity t_ff_rst is
+entity jk_ff_rst is
+--  Port ( );
     Port ( clk : in STD_LOGIC;
-           rst : in STD_LOGIC;
-           t : in STD_LOGIC;
-           q : out STD_LOGIC;
-           q_bar : out STD_LOGIC);
-end t_ff_rst;
+               rst : in STD_LOGIC;
+               j : in STD_LOGIC;
+               k_bar : in STD_LOGIC;
+               q : out STD_LOGIC;
+               q_bar : out STD_LOGIC);
+end jk_ff_rst;
 
-architecture behavioral of t_ff_rst is
-    -- It must use this local signal instead of output ports
+architecture Behavioral of jk_ff_rst is
+-- It must use this local signal instead of output ports
     -- because "out" ports cannot be read within the architecture
     signal sig_q : std_logic;
 begin
@@ -27,28 +29,30 @@ begin
     -- p_t_ff_rst:
     -- T type flip-flop with a high-active synchro reset and
     -- rising-edge clk.
-    -- q(n+1) = t./q(n) + /t.q(n)
-    -- sig_q = t./sig_q + /t.sig_q
-    -- q(n+1) =  q(n) if t = 0 (no change)
-    -- q(n+1) = /q(n) if t = 1 (inversion)
+    -- q(n+1) = j./q(n) + /k.q(n)
+    -- sig_q = j./sig_q + /k.sig_q
     --------------------------------------------------------
-    p_t_ff_rst : process (clk)
+    p_jk_ff_rst : process (clk)
     begin
         if rising_edge(clk) then
 
         -- WRITE YOUR CODE HERE
             if (rst = '1') then
                 sig_q <= '0';
-                
-            elsif (t = '0') then
+            elsif (j = '0' and  k_bar  = '1') then
+                sig_q <= '0'; 
+            elsif (j = '1' and  k_bar  = '0') then
+                sig_q <= '1';    
+            elsif (j = '0' and  k_bar  = '0') then
                 sig_q <= sig_q;                
-            elsif (t = '1') then
+            elsif (j = '1' and k_bar  = '1') then
                 sig_q <= not sig_q;
             end if;    
         end if;
-    end process p_t_ff_rst;
+    end process p_jk_ff_rst;
 
     -- Output ports are permanently connected to local signal
     q     <= sig_q;
     q_bar <= not sig_q;
-end architecture behavioral;
+
+end Behavioral;

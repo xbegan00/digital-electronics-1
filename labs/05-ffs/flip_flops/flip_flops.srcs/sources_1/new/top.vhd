@@ -25,8 +25,16 @@ architecture behavioral of top is
 
   -- Internal signals between flip-flops
   signal sig_ff0 : std_logic;
+  signal sig_ff1 : std_logic;
+  signal sig_ff2 : std_logic;
+  signal sig_ff3 : std_logic;
 
   -- WRITE YOUR CODE HERE
+  signal sig_d0 : std_logic;
+  signal sig_d1 : std_logic;
+  signal sig_d2 : std_logic;
+  signal sig_d3 : std_logic;
+  
 
 begin
 
@@ -37,7 +45,8 @@ begin
           clk => CLK100MHZ,
           rst => BTNC,
           -- WRITE YOUR CODE HERE
-          q   => sig_ff0
+          q   => sig_ff0,
+          d   => sig_d0
       );
 
   d_ff_1 : entity work.d_ff_rst
@@ -45,23 +54,43 @@ begin
           clk => CLK100MHZ,
           rst => BTNC,
           -- WRITE YOUR CODE HERE
-
+          q   => sig_ff1,
+          d   => sig_d1
       );
+      
 -- PUT OTHER TWO FLIP-FLOP INSTANCES HERE
-  t_ff_0 : entity work.t_ff_rst
+ d_ff_2 : entity work.d_ff_rst
       port map (
           clk => CLK100MHZ,
           rst => BTNC,
           -- WRITE YOUR CODE HERE
-          q   => sig_ff0
+          q   => sig_ff2,
+          d   => sig_d2            
       );
 
-  t_ff_1 : entity work.t_ff_rst
+  d_ff_3 : entity work.d_ff_rst
       port map (
           clk => CLK100MHZ,
           rst => BTNC,
           -- WRITE YOUR CODE HERE
-
-      ); 
+          q   => sig_ff3,
+          d   => sig_d3          
+      );
+   
+  -- Display input value on LEDs
+  
+      LED(0) <= sig_ff0;  
+      LED(1) <= sig_ff1;
+      LED(2) <= sig_ff2;
+      LED(3) <= sig_ff3;  
+      sig_d0 <= '1' when (SW(0) = '1') else
+                '0';
+      sig_d1 <= '1' when (SW(0) = '1') else
+                '0';
+      sig_d2 <= '1' when (SW(0) = '1') else
+                '0';
+      sig_d3 <= '1' when (SW(0) = '1') else
+                '0';
+            
 
 end architecture behavioral;
