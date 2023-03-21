@@ -1,0 +1,19 @@
+#-----------------------------------------------------------
+# Vivado v2020.2 (64-bit)
+# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
+# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+# Start of session at: Tue Mar 21 07:44:56 2023
+# Process ID: 26492
+# Current directory: E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/05-ffs/flip_flops
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent36376 E:\SCHOOL\2022-2023\LETNY SEMESTER\BPC-DE1\PC\digital-electronics-1-main\labs\05-ffs\flip_flops\flip_flops.xpr
+# Log file: E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/05-ffs/flip_flops/vivado.log
+# Journal file: E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/05-ffs/flip_flops\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project {E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/05-ffs/flip_flops/flip_flops.xpr}
+update_compile_order -fileset sources_1
+synth_design -rtl -rtl_skip_mlo -name rtl_1
+close_design
+synth_design -rtl -rtl_skip_mlo -name rtl_1
+close_design
+synth_design -rtl -rtl_skip_mlo -name rtl_1

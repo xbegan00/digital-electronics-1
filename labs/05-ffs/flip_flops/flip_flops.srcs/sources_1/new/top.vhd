@@ -53,7 +53,7 @@ begin
           rst => BTNC,
           -- WRITE YOUR CODE HERE
           q   => sig_ff1,
-          d   => sig_data
+          d   => sig_ff0
       );
       
 -- PUT OTHER TWO FLIP-FLOP INSTANCES HERE
@@ -63,7 +63,7 @@ begin
           rst => BTNC,
           -- WRITE YOUR CODE HERE
           q   => sig_ff2,
-          d   => sig_data     
+          d   => sig_ff1     
       );
 
   d_ff_3 : entity work.d_ff_rst
@@ -72,7 +72,7 @@ begin
           rst => BTNC,
           -- WRITE YOUR CODE HERE
           q   => sig_ff3,
-          d   => sig_data          
+          d   => sig_ff2          
       );
    
   -- Display input value on LEDs
