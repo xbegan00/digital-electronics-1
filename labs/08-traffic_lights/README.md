@@ -1,4 +1,4 @@
-# Lab 8: INSERT_YOUR_FIRSTNAME INSERT_YOUR_LASTNAME
+# Lab 8: Mojmir Began
 ### Pre-lab preparation
 1. See [schematic](https://github.com/tomas-fryza/digital-electronics-1/blob/master/docs/nexys-a7-sch.pdf) or [reference manual](https://reference.digilentinc.com/reference/programmable-logic/nexys-a7/reference-manual) of the Nexys A7 board and find out the connection of two RGB LEDs, ie to which FPGA pins are connected and how. How you can control them to get red, yellow, or green colors? Draw the schematic with RGB LEDs.
 
