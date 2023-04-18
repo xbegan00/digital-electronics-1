@@ -2,9 +2,9 @@
 
 ### Team members
 
-* Begán Mojmír (205 895) (Git-Hub repositor, ...)
-* Koiš Christopher (240 635)(responsible for ...)
-* Shapoval Yaroslav (233 258)(responsible for ...)
+* Begán Mojmír (205 895) (Git-Hub repositor, transmitter, ...)
+* Koiš Christopher (240 635)(reciever, ...)
+* Shapoval Yaroslav (233 258)(reciever, baud component, ...)
 
 ## Theoretical description and explanation
 
