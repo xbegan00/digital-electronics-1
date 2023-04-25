@@ -46,7 +46,7 @@ library ieee;
 
 entity driver_7seg_8digits is
   port (
-     clk     : in    std_logic;
+    clk     : in    std_logic;
     rst     : in    std_logic;
     data0   : in    std_logic_vector(3 downto 0);
     data1   : in    std_logic_vector(3 downto 0);
@@ -90,7 +90,7 @@ begin
       -- FOR IMPLEMENTATION, CHANGE THIS VALUE TO 400,000
       -- 4      @ 4 ns
       -- 400000 @ 4 ms
-      g_MAX => 700000
+      g_MAX => 400000
     )
     port map (
       clk => clk,

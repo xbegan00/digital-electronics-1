@@ -12,10 +12,15 @@ use ieee.numeric_std.all; -- Package for arithmetic operations
 
 entity baud is
 
-    Port ( clk : in STD_LOGIC;
-           rst : in STD_LOGIC;
+    Port ( clk : in STD_LOGIC; --! Main clock
+           rst : in STD_LOGIC; --! High-active synchronous reset
            baud_sw : in STD_LOGIC_VECTOR(2 downto 0);
-           clk_baud : out STD_LOGIC --Output baud clock for RX/TX, using code from clock_enable
+           clk_baud : out STD_LOGIC; --Output baud clock for RX/TX, using code from clock_enable
+           data0 : out STD_LOGIC_VECTOR(3 downto 0); --data for display
+           data1 : out STD_LOGIC_VECTOR(3 downto 0);
+           data2 : out STD_LOGIC_VECTOR(3 downto 0);
+           data3 : out STD_LOGIC_VECTOR(3 downto 0);
+           data4 : out STD_LOGIC_VECTOR(3 downto 0)
            );
 end baud;
 
@@ -27,30 +32,83 @@ architecture behavioral of baud is
   
 begin
 
-    baud_solve : process(baud_sw) is
+    baud_solve : process(clk) is
     begin
-        case baud_sw is
-            when "000" =>
-                baud_gen <= 4800;
-            when "001" =>
-                baud_gen <= 9600;
-            when "010" =>
-                baud_gen <= 14400;
-            when "011" =>
-                baud_gen <= 19200;
-            when "100" =>
-                baud_gen <= 28800;
-            when "101" =>
-                baud_gen <= 38400;
-            when "110" =>
-                baud_gen <= 57600;
-            when "111" =>
-                baud_gen <= 115200;
-            when others =>
-                baud_gen <= 4800;            
-            end case;
+        if rising_edge(clk) then              -- Synchronous process  
+                case baud_sw is
+                    when "000" =>
+                        baud_gen <= 20833;   --4800
+                        data0 <= "0000";
+                        data1 <= "0000";
+                        data2 <= "1000";
+                        data3 <= "0100";
+                        data4 <= "0000";
+                    when "001" =>
+                        baud_gen <= 10417;   --9600
+                        data0 <= "0000";
+                        data1 <= "0000";
+                        data2 <= "0110";
+                        data3 <= "1001";
+                        data4 <= "0000";
+                    when "010" =>
+                        baud_gen <= 6944;    --14400
+                        data0 <= "0000";
+                        data1 <= "0000";
+                        data2 <= "0100";
+                        data3 <= "0100";
+                        data4 <= "0001";
+                    when "011" =>
+                        baud_gen <= 5208;    --19200
+                        data0 <= "0000";
+                        data1 <= "0000";
+                        data2 <= "0010";
+                        data3 <= "1001";
+                        data4 <= "0001";
+                    when "100" =>            
+                        baud_gen <= 3472;    --28800
+                        data0 <= "0000";
+                        data1 <= "0000";
+                        data2 <= "1000";
+                        data3 <= "1000";
+                        data4 <= "0010";
+                    when "101" =>
+                        baud_gen <= 2604;    --38400
+                        data0 <= "0000";
+                        data1 <= "0000";
+                        data2 <= "0100";
+                        data3 <= "1000";
+                        data4 <= "0011";
+                    when "110" =>
+                        baud_gen <= 1736;    --57600
+                        data0 <= "0000";
+                        data1 <= "0000";
+                        data2 <= "0110";
+                        data3 <= "0111";
+                        data4 <= "0101";
+                    when "111" =>
+                        baud_gen <= 868;     --115200
+                        data0 <= "0000";
+                        data1 <= "0000";
+                        data2 <= "0010";
+                        data3 <= "0101";
+                        data4 <= "1011";
+                    when others =>
+                        baud_gen <= 20833;   --4800
+                        data0 <= "0000";
+                        data1 <= "0000";
+                        data2 <= "1000";
+                        data3 <= "0100";
+                        data4 <= "0000";
+                    end case;
+        end if;
      end process baud_solve;
-        
+     
+  --------------------------------------------------------
+  -- 1. process dava 100M signalu za sekundu 
+  -- 2. slo?ka, ktera nabiha a ma velikost v zavislosti od baud_sw
+  -- 3. kdy? dosahneme vysledn? hodnoty, po?le se signal na rx/tx a slo?ka p?ejde na 0
+  -- 3.1 kdy? zm?nime n?co v baud_gen, tak slo?ka p?jde na 0
+
   --------------------------------------------------------
   -- p_clk_enable:
   -- Generate clock enable signal. By default, enable signal
@@ -60,9 +118,9 @@ begin
   begin
 
     if rising_edge(clk) then              -- Synchronous process
-      if (rst = '1') then                 -- High-active reset
-        sig_cnt     <= 0;                 -- Clear local counter
-        clk_baud    <= '0';               -- Set output to low
+       if (rst = '1') then                 -- High-active reset
+         sig_cnt     <= 0;                 -- Clear local counter
+         clk_baud    <= '0';               -- Set output to low
 
       -- Test number of clock periods
       elsif (sig_cnt >= (baud_gen - 1)) then

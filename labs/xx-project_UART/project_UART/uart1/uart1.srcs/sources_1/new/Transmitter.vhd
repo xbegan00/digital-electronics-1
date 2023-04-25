@@ -39,13 +39,14 @@ entity Transmitter is
         g_CNT_WIDTH : natural := 4      --! Default number of counter bits
       );
     Port ( Tx_data : in STD_LOGIC_VECTOR (8 downto 0);          -- always 9bits
-           Tx_frame_width : in STD_LOGIC_VECTOR (4 downto 0);   -- frame width
+           Tx_frame_width : in STD_LOGIC_VECTOR (3 downto 0);   -- frame width
            par_bit : in STD_LOGIC;                              --add par bit to packet
            par_bit_t : in STD_LOGIC;                            -- type of parity (odd or even)
            clk : in STD_LOGIC;                                  --clk signal from top
            clk_baud : in STD_LOGIC;                             --clk signal from baud
            rst : in STD_LOGIC;                                  --rst from top
            Tx_en : in STD_LOGIC;                                --start or stop transmitt
+           stop_bit : in STD_LOGIC;                             --1 or 2 stop bits
            Tx_packet : out STD_LOGIC_VECTOR (g_PACKET_WIDTH - 1 downto 0));     -- completed packet to send           
 end Transmitter;
 
@@ -64,7 +65,7 @@ architecture Behavioral of Transmitter is
     signal sig_cnt : unsigned(g_CNT_WIDTH - 1 downto 0);                    --! Local counter  
     signal sig_frame_width : integer:= 0;
     signal sig_data_width : integer:= 9;
-    signal sig_packet_width : integer:= 0;
+    signal sig_packet_width : integer:= 1;
     signal sig_cnt_par : integer:= 0;
 begin
   process(clk, rst)
@@ -100,6 +101,7 @@ begin
                                 if (Tx_frame(sig_frame_width) = '1') then
                                     sig_cnt_par <= sig_cnt_par + 1;
                                 end if;
+                                sig_frame_width <= sig_frame_width + 1;
                             end loop;
                         if ((par_bit_t = '0') and (sig_cnt_par mod 2 = 0)) then --even parity
                             sig_par_bit <= '1'; 
@@ -116,11 +118,18 @@ begin
                     sig_state <= PACKET;
                 --PACKET
                   when PACKET =>
-                  
-                    while  sig_packet_width < g_PACKET_WIDTH loop
-                    
-                    
+                    Tx_packet(0)  <= '0'; 
+                    while  sig_packet_width <= g_FRAME_WIDTH loop
+                        Tx_packet(sig_packet_width)  <= Tx_frame(sig_packet_width-1);  
+                        sig_packet_width <= sig_packet_width + 1;                  
                     end loop;
+                    if (stop_bit = '0') then
+                        Tx_packet(sig_packet_width + 1)  <= '0'; 
+                    else
+                        Tx_packet(sig_packet_width + 1)  <= '0'; 
+                        Tx_packet(sig_packet_width + 2)  <= '0';
+                    end if;
+                    sig_packet_width <= 1;  
                 --SEND
                   when SEND =>
                     if (Tx_en = '1') then                                        
