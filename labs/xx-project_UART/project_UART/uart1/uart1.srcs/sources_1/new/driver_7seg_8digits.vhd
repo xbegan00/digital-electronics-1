@@ -73,7 +73,7 @@ architecture behavioral of driver_7seg_8digits is
   signal sig_en_4ms : std_logic;
 
   -- Internal 3-bit counter for multiplexing 8 digits
-  signal sig_cnt_3bit : std_logic_vector(7 downto 0);
+  signal sig_cnt_3bit : std_logic_vector(2 downto 0);
 
   -- Internal 4-bit value for 7-segment decoder
   signal sig_hex : std_logic_vector(3 downto 0);
@@ -90,7 +90,7 @@ begin
       -- FOR IMPLEMENTATION, CHANGE THIS VALUE TO 400,000
       -- 4      @ 4 ns
       -- 400000 @ 4 ms
-      g_MAX => 400000
+      g_MAX => 200000
     )
     port map (
       clk => clk,
@@ -104,7 +104,7 @@ begin
   --------------------------------------------------------
   bin_cnt0 : entity work.cnt_up_down
     generic map (
-      g_CNT_WIDTH => 8
+      g_CNT_WIDTH => 3
     )
     port map (
       en  => sig_en_4ms,

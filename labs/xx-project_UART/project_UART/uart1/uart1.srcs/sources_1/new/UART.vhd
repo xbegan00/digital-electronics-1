@@ -4,7 +4,7 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity UART is
 Port ( CLK100MHZ : in STD_LOGIC;
            SW : in STD_LOGIC_VECTOR (15 downto 0);
-           LED : in STD_LOGIC_VECTOR (15 downto 0);
+           --LED : in STD_LOGIC_VECTOR (15 downto 0);
            CA : out STD_LOGIC;
            CB : out STD_LOGIC;
            CC : out STD_LOGIC;
@@ -13,7 +13,8 @@ Port ( CLK100MHZ : in STD_LOGIC;
            CF : out STD_LOGIC;
            CG : out STD_LOGIC;
            DP : out STD_LOGIC;
-           --XA_P : out STD_LOGIC; --TX
+           JA : out STD_LOGIC; --TX
+           --XA_N : out STD_LOGIC; --GND
            AN : out STD_LOGIC_VECTOR (7 downto 0);
            BTNC : in STD_LOGIC;
            BTNU : in STD_LOGIC;
@@ -52,7 +53,6 @@ begin
           data2 => sig_data2,
           data3 => sig_data3,
           data4 => sig_data4
-          
         );
     display : entity work.driver_7seg_8digits
          port map( 
@@ -67,8 +67,8 @@ begin
             data6 => sig_data6,
             data7 => sig_data7,
             dp_vect => "11110111",
-            dp => DP,
-            dig => AN,
+            dp => DP,  
+            dig => AN,          
             seg(6) => CA,
             seg(5) => CB,
             seg(4) => CC,
@@ -92,9 +92,19 @@ begin
             
             clk_baud => sig_clk_baud,               --clk signal from baud
             Tx_en => SW(10),                        --start or stop transmitt
-            stop_bit => SW(12)                     --1 or 2 stop bits
-            --Tx_output => XA_P                       -- completed packet to send               
+            stop_bit => SW(12),                    --1 or 2 stop bits
+            Tx_output => JA                      -- completed packet to send               
          ); 
+     transmitter2 : entity work.Nex_Reciever
+         port map( 
+            clk => CLK100MHZ,
+            rst => BTNC,         
+            rx_tx_switch => SW(9),               
+            data_in_sw => SW(7 downto 0),
+            start_bit => '0',
+            one_byte =>  '0',   
+            baud_switches => SW(15 downto 13) 
+         );     
      clk_en1 : entity work.clock_enable
          generic map(
           g_MAX => 25000000          
@@ -104,9 +114,23 @@ begin
             clk => CLK100MHZ,
             ce  => sig_en_250ms
          ); 
-     p_settings : process (sig_en_250ms) is --options with buttons
+     p_settings : process (CLK100MHZ) is --options with buttons
      begin
-        if (rising_edge(sig_en_250ms)) then
+     
+        if (rising_edge(CLK100MHZ)) then
+            sig_bit_t <= '0';
+            sig_data5 <= "0000";
+            sig_data7 <= "1001";
+            if (SW(12) = '1') then
+                sig_data6 <= "0010";
+            elsif (SW(12) = '0') then
+                sig_data6 <= "0001";
+            end if;
+            if (SW(11) = '1') then
+                sig_data5 <= "0001";
+            elsif (SW(12) = '0') then
+                sig_data5 <= "0000";
+            end if;
             if (BTNC = '0') then
                 if (BTNU = '1') then
                     sig_bit_t <= '1';
@@ -123,5 +147,5 @@ begin
             end if;
         end if;
      end process p_settings;
-    
+    --XA_N <= '0';
 end Behavioral;
