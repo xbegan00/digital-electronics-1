@@ -53,23 +53,14 @@ entity Transmitter is
 end Transmitter;
 
 architecture Behavioral of Transmitter is
-    type t_state is ( --BIT by BIT
-        START_BIT, 
-        PARITY_BIT,
-        FRAME_BIT,
-        STOP_BITS        
-    );
-    signal Tx_frame : STD_LOGIC_VECTOR (g_FRAME_WIDTH - 1 downto 0);        -- allocated data to frame from Tx_data
-    signal sig_state : t_state := START_BIT;                               -- signal for state          
+    
+    
     signal sig_rst : std_logic := '1';
-    signal sig_par_bit : std_logic := '0';
-    signal sig_cnt : unsigned(g_CNT_WIDTH - 1 downto 0);                    --! Local counter  
-    signal sig_frame_width : integer:= 0;
-    signal sig_data_width : integer:= 9;
-    signal sig_packet_width : integer:= 1;
-    signal sig_cnt_par : integer:= 0;
-    shared variable i : integer:= 0;
-    shared variable y : integer:= 0;
+    signal sig_par_bit : std_logic := '0';   
+    shared variable a : integer:= 0;
+    shared variable fw : integer:= 0;
+    shared variable c : integer:= 0;
+    shared variable d : integer:= 0;
     
 begin
   process(clk_baud, rst)
@@ -77,75 +68,67 @@ begin
          
          if (rising_edge(clk_baud)) then --clk_baud
             if (rst = '1') then
-                sig_rst <= '1';
-                sig_state <= START_BIT;                
-            else
-                case sig_state is
-                --START
-                  when START_BIT =>
-                    sig_rst <= '0'; 
-                    if (Tx_en = '1') then                                        
-                        sig_state <= PARITY_BIT; 
-                    elsif (Tx_en = '0') then
-                        sig_state <= START_BIT;                        
-                    end if;
-                --FRAME
-                  when FRAME_BIT =>   
-                     i := 0;   
-                     y := 0;                                 
-                     while (i < 9) loop
-                        Tx_frame(i) <= Tx_data(i);
-                         i := i + 1;   
-                         y := y + 1;  
-                     end loop;
-                     sig_frame_width <= 0;
-                     sig_data_width <= 0;
-                     sig_state <= PARITY_BIT;
-                --PARITY
-                  when PARITY_BIT =>
-                    i := 0;   
-                    y := 0; 
-                    if (par_bit = '1') then
-                        while  (i < 9) loop
-                           if (Tx_frame(i) = '1') then
-                                sig_cnt_par <= sig_cnt_par + 1;
-                                i := i + 1;
-                           else
-                                i := i + 1;
-                           end if;                           
-                        end loop;
-                        if ((par_bit_t = '0') and (sig_cnt_par mod 2 = 0)) then --even parity
-                            sig_par_bit <= '1'; 
-                        else
-                            sig_par_bit <= '0';                          
-                        end if;
-                        if ((par_bit_t = '1') and (sig_cnt_par mod 2 = 0)) then --odd parity
-                            sig_par_bit <= '0'; 
-                        else
-                            sig_par_bit <= '1';                          
-                        end if;                        
-                         sig_cnt_par <= 0;                     
-                    end if;
-                    sig_state <= STOP_BITS;
-                --PACKET
-                  when STOP_BITS =>
-                    i := 0;
-                    y := 0;
-                    Tx_packet(0)  <= '0'; 
-                    while  i < 9 loop
-                        Tx_packet(i)  <= Tx_frame(i);  
-                        i := i + 1;                  
+                sig_rst <= '1';                                
+            else                
+                if (Tx_en = '1') then
+                    sig_rst <= '0';    
+                    --START_bit
+                    Tx_output <= '0';
+                    --Set number for FRAME, so How mane bits from data will be send
+                    a:= 0;
+                    fw:= 5;
+                    d:= 0;                    
+                    if (Tx_frame_width = "0101") then 
+                        fw:= 5;  --5bits
+                    elsif (Tx_frame_width = "0110") then
+                        fw:= 6;   --6bits
+                    elsif (Tx_frame_width = "0111") then
+                        fw:= 7;   --7bits
+                    elsif (Tx_frame_width = "1000") then
+                        fw:= 8;   --8bits
+                    elsif (Tx_frame_width = "1001") then
+                        fw:= 9;   --9bits
+                    end if; 
+                     
+                    --FRAME_Bits + PARITY --nedokoncene vzpise vsetky 9 bitov
+                    while a < g_FRAME_WIDTH loop                             
+                            Tx_output <= Tx_data(a);
+                            if (Tx_data(a) = '1') then
+                                Tx_output <= Tx_data(a);
+                                d:= d + 1;                                                                                
+                            end if;
+                            a:= a + 1;                        
                     end loop;
-                    if (stop_bit = '0') then
-                        Tx_packet(sig_packet_width + 1)  <= '0'; 
-                    else
-                        Tx_packet(sig_packet_width + 1)  <= '0'; 
-                        Tx_packet(sig_packet_width + 2)  <= '0';
+                    --PARITY_bit
+                    if(par_bit = '1')then
+                    
+                        if (par_bit_t = '1') then --EVEN PARITY
+                            if(d mod 2 = 0) then
+                                Tx_output <= '1';
+                            else
+                                Tx_output <= '0';
+                            end if;
+                        elsif (par_bit_t = '0') then --ODD PARITY
+                            if(d mod 2 = 0) then
+                                Tx_output <= '0';
+                            else
+                                Tx_output <= '1';
+                        end if;                         
                     end if;
-                    sig_packet_width <= 1; 
-                    sig_state <= START_BIT;                  
-                end case;
-                
+                    --STOP_Bits
+                    if (stop_bit = '1') then
+                        c:= 0;
+                        while c < 2 loop
+                            Tx_output <= '1';
+                            c:= c + 1;
+                        end loop;
+                    else
+                        Tx_output <= '1';
+                    end if;
+                else  
+                    Tx_output <= '1';                 
+                end if;
+                end if;
             end if;
          end if;
    end process;    

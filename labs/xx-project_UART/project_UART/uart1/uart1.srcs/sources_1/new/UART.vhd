@@ -1,35 +1,5 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date: 04/11/2023 01:10:52 PM
--- Design Name: 
--- Module Name: UART - Behavioral
--- Project Name: 
--- Target Devices: 
--- Tool Versions: 
--- Description: 
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
-----------------------------------------------------------------------------------
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---use IEEE.NUMERIC_STD.ALL;
-
--- Uncomment the following library declaration if instantiating
--- any Xilinx leaf cells in this code.
---library UNISIM;
---use UNISIM.VComponents.all;
 
 entity UART is
 Port ( CLK100MHZ : in STD_LOGIC;
@@ -43,7 +13,7 @@ Port ( CLK100MHZ : in STD_LOGIC;
            CF : out STD_LOGIC;
            CG : out STD_LOGIC;
            DP : out STD_LOGIC;
-           XA_P : out STD_LOGIC_VECTOR (15 downto 0); --TX
+           --XA_P : out STD_LOGIC; --TX
            AN : out STD_LOGIC_VECTOR (7 downto 0);
            BTNC : in STD_LOGIC;
            BTNU : in STD_LOGIC;
@@ -67,6 +37,7 @@ architecture Behavioral of UART is
   signal sig_data6       : STD_LOGIC_VECTOR (3 downto 0);
   signal sig_data7       : STD_LOGIC_VECTOR (3 downto 0); 
   signal sig_frame_width     : STD_LOGIC_VECTOR (3 downto 0); 
+  signal sig_en_250ms : std_logic;
   
 begin
 
@@ -121,12 +92,36 @@ begin
             
             clk_baud => sig_clk_baud,               --clk signal from baud
             Tx_en => SW(10),                        --start or stop transmitt
-            stop_bit => SW(12),                     --1 or 2 stop bits
-            Tx_packet => XA_P                       -- completed packet to send               
+            stop_bit => SW(12)                     --1 or 2 stop bits
+            --Tx_output => XA_P                       -- completed packet to send               
          ); 
-     p_settings : process (CLK100MHZ) is --options with buttons
+     clk_en1 : entity work.clock_enable
+         generic map(
+          g_MAX => 25000000          
+         )
+         port map( 
+            rst => BTNC,
+            clk => CLK100MHZ,
+            ce  => sig_en_250ms
+         ); 
+     p_settings : process (sig_en_250ms) is --options with buttons
      begin
-     
+        if (rising_edge(sig_en_250ms)) then
+            if (BTNC = '0') then
+                if (BTNU = '1') then
+                    sig_bit_t <= '1';
+                end if;
+                if (BTND = '1') then
+                    sig_bit_t <= '0';
+                end if;
+                if (BTNR = '1') then
+                    sig_bit_t <= '1';
+                end if;
+                if (BTNL = '1') then
+                    sig_bit_t <= '0';
+                end if;
+            end if;
+        end if;
      end process p_settings;
     
 end Behavioral;
