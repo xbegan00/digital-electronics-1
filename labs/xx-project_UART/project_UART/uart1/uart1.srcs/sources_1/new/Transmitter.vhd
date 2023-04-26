@@ -23,6 +23,7 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all;
 
+
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
 --use IEEE.NUMERIC_STD.ALL;
@@ -42,24 +43,24 @@ entity Transmitter is
            Tx_frame_width : in STD_LOGIC_VECTOR (3 downto 0);   -- frame width
            par_bit : in STD_LOGIC;                              --add par bit to packet
            par_bit_t : in STD_LOGIC;                            -- type of parity (odd or even)
-           clk : in STD_LOGIC;                                  --clk signal from top
-           clk_baud : in STD_LOGIC;                             --clk signal from baud
+           clk_baud : in STD_LOGIC;                                  --clk signal from top
            rst : in STD_LOGIC;                                  --rst from top
            Tx_en : in STD_LOGIC;                                --start or stop transmitt
            stop_bit : in STD_LOGIC;                             --1 or 2 stop bits
-           Tx_packet : out STD_LOGIC_VECTOR (g_PACKET_WIDTH - 1 downto 0));     -- completed packet to send           
+           Tx_packet : out STD_LOGIC_VECTOR (g_PACKET_WIDTH - 1 downto 0);     -- completed packet to send    
+           Tx_output : out STD_LOGIC
+           );         
 end Transmitter;
 
 architecture Behavioral of Transmitter is
-    type t_state is (
-        START_STOP,
-        PARITY,
-        FRAME,
-        PACKET,
-        SEND
+    type t_state is ( --BIT by BIT
+        START_BIT, 
+        PARITY_BIT,
+        FRAME_BIT,
+        STOP_BITS        
     );
     signal Tx_frame : STD_LOGIC_VECTOR (g_FRAME_WIDTH - 1 downto 0);        -- allocated data to frame from Tx_data
-    signal sig_state : t_state := START_STOP;                               -- signal for state          
+    signal sig_state : t_state := START_BIT;                               -- signal for state          
     signal sig_rst : std_logic := '1';
     signal sig_par_bit : std_logic := '0';
     signal sig_cnt : unsigned(g_CNT_WIDTH - 1 downto 0);                    --! Local counter  
@@ -67,42 +68,52 @@ architecture Behavioral of Transmitter is
     signal sig_data_width : integer:= 9;
     signal sig_packet_width : integer:= 1;
     signal sig_cnt_par : integer:= 0;
+    shared variable i : integer:= 0;
+    shared variable y : integer:= 0;
+    
 begin
-  process(clk, rst)
+  process(clk_baud, rst)
    begin
-         if (rising_edge(clk)) then
+         
+         if (rising_edge(clk_baud)) then --clk_baud
             if (rst = '1') then
                 sig_rst <= '1';
-                sig_state <= START_STOP;                
+                sig_state <= START_BIT;                
             else
                 case sig_state is
                 --START
-                  when START_STOP =>
+                  when START_BIT =>
                     sig_rst <= '0'; 
                     if (Tx_en = '1') then                                        
-                        sig_state <= PARITY; 
+                        sig_state <= PARITY_BIT; 
                     elsif (Tx_en = '0') then
-                        sig_state <= START_STOP;                        
+                        sig_state <= START_BIT;                        
                     end if;
                 --FRAME
-                  when FRAME =>                     
-                     while sig_frame_width < g_FRAME_WIDTH and sig_data_width < 9 loop
-                        Tx_frame(sig_frame_width) <= Tx_data(sig_data_width);
-                        sig_frame_width <= sig_frame_width + 1;
-                        sig_data_width <= sig_data_width + 1;
+                  when FRAME_BIT =>   
+                     i := 0;   
+                     y := 0;                                 
+                     while (i < 9) loop
+                        Tx_frame(i) <= Tx_data(i);
+                         i := i + 1;   
+                         y := y + 1;  
                      end loop;
                      sig_frame_width <= 0;
                      sig_data_width <= 0;
-                     sig_state <= PARITY;
+                     sig_state <= PARITY_BIT;
                 --PARITY
-                  when PARITY =>
+                  when PARITY_BIT =>
+                    i := 0;   
+                    y := 0; 
                     if (par_bit = '1') then
-                        while  sig_frame_width < g_FRAME_WIDTH loop
-                                if (Tx_frame(sig_frame_width) = '1') then
-                                    sig_cnt_par <= sig_cnt_par + 1;
-                                end if;
-                                sig_frame_width <= sig_frame_width + 1;
-                            end loop;
+                        while  (i < 9) loop
+                           if (Tx_frame(i) = '1') then
+                                sig_cnt_par <= sig_cnt_par + 1;
+                                i := i + 1;
+                           else
+                                i := i + 1;
+                           end if;                           
+                        end loop;
                         if ((par_bit_t = '0') and (sig_cnt_par mod 2 = 0)) then --even parity
                             sig_par_bit <= '1'; 
                         else
@@ -115,13 +126,15 @@ begin
                         end if;                        
                          sig_cnt_par <= 0;                     
                     end if;
-                    sig_state <= PACKET;
+                    sig_state <= STOP_BITS;
                 --PACKET
-                  when PACKET =>
+                  when STOP_BITS =>
+                    i := 0;
+                    y := 0;
                     Tx_packet(0)  <= '0'; 
-                    while  sig_packet_width <= g_FRAME_WIDTH loop
-                        Tx_packet(sig_packet_width)  <= Tx_frame(sig_packet_width-1);  
-                        sig_packet_width <= sig_packet_width + 1;                  
+                    while  i < 9 loop
+                        Tx_packet(i)  <= Tx_frame(i);  
+                        i := i + 1;                  
                     end loop;
                     if (stop_bit = '0') then
                         Tx_packet(sig_packet_width + 1)  <= '0'; 
@@ -129,14 +142,8 @@ begin
                         Tx_packet(sig_packet_width + 1)  <= '0'; 
                         Tx_packet(sig_packet_width + 2)  <= '0';
                     end if;
-                    sig_packet_width <= 1;  
-                --SEND
-                  when SEND =>
-                    if (Tx_en = '1') then                                        
-                        sig_state <= SEND; 
-                    elsif (Tx_en = '0') then
-                        sig_state <= START_STOP;                        
-                    end if;
+                    sig_packet_width <= 1; 
+                    sig_state <= START_BIT;                  
                 end case;
                 
             end if;

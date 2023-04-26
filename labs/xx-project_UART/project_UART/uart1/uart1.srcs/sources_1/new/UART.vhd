@@ -66,16 +66,16 @@ architecture Behavioral of UART is
   signal sig_data5       : STD_LOGIC_VECTOR (3 downto 0);
   signal sig_data6       : STD_LOGIC_VECTOR (3 downto 0);
   signal sig_data7       : STD_LOGIC_VECTOR (3 downto 0); 
-  signal sig_frame_width     : integer:= 5; 
+  signal sig_frame_width     : STD_LOGIC_VECTOR (3 downto 0); 
   
 begin
 
     baud : entity work.baud      
         port map(          
           clk => CLK100MHZ,
-          rst => '0',
-          baud_sw  => SW(15 downto 14),
-          clk_baud  => sig_clk,
+          rst => BTNC,
+          baud_sw  => SW(15 downto 13),
+          clk_baud  => sig_clk_baud,
           data0 => sig_data0,
           data1 => sig_data1,
           data2 => sig_data2,
@@ -85,8 +85,8 @@ begin
         );
     display : entity work.driver_7seg_8digits
          port map( 
-            clk => sig_clk,
-            rst => sig_rst,
+            clk => CLK100MHZ,
+            rst => BTNC,
             data0 => sig_data0,
             data1 => sig_data1,
             data2 => sig_data2,
@@ -96,6 +96,8 @@ begin
             data6 => sig_data6,
             data7 => sig_data7,
             dp_vect => "11110111",
+            dp => DP,
+            dig => AN,
             seg(6) => CA,
             seg(5) => CB,
             seg(4) => CC,
@@ -108,20 +110,23 @@ begin
          generic map(
           g_CNT_WIDTH => 4,
           g_FRAME_WIDTH => 9,
-          g_PACKET_WIDTH => 9
+          g_PACKET_WIDTH => 16
          )
          port map( 
-            clk => sig_clk,
-            rst => sig_rst,
-            Tx_data => SW(8 downto 0),         -- always 9bits
-            Tx_frame_width => sig_frame_width,   -- frame width
-            sig_bit_t
-            par_bit => SW(11),                       --add par bit to packet
-            --par_bit_t : in STD_LOGIC;                            -- type of parity (odd or even)
-            clk_baud => sig_clk_baud,                           --clk signal from baud
-            Tx_en => SW(10),                                --start or stop transmitt
-            stop_bit => SW(12),                             --1 or 2 stop bits
-            Tx_packet => XA_P   -- completed packet to send               
+            rst => BTNC,
+            Tx_data => SW(8 downto 0),              -- always 9bits
+            Tx_frame_width => sig_frame_width,      -- frame width
+            par_bit_t => sig_bit_t,
+            par_bit => SW(11),                      --add par bit to packet
+            
+            clk_baud => sig_clk_baud,               --clk signal from baud
+            Tx_en => SW(10),                        --start or stop transmitt
+            stop_bit => SW(12),                     --1 or 2 stop bits
+            Tx_packet => XA_P                       -- completed packet to send               
          ); 
+     p_settings : process (CLK100MHZ) is --options with buttons
+     begin
+     
+     end process p_settings;
     
 end Behavioral;
