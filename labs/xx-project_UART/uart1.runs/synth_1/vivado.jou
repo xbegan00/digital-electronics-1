@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2020.2 (64-bit)
+# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
+# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+# Start of session at: Wed Apr 26 16:34:13 2023
+# Process ID: 5288
+# Current directory: C:/Users/xbegan00/Documents/xbegan00/digital-electronics-1/labs/xx-project_UART/project_UART/uart1/uart1.runs/synth_1
+# Command line: vivado.exe -log UART.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source UART.tcl
+# Log file: C:/Users/xbegan00/Documents/xbegan00/digital-electronics-1/labs/xx-project_UART/project_UART/uart1/uart1.runs/synth_1/UART.vds
+# Journal file: C:/Users/xbegan00/Documents/xbegan00/digital-electronics-1/labs/xx-project_UART/project_UART/uart1/uart1.runs/synth_1\vivado.jou
+#-----------------------------------------------------------
+source UART.tcl -notrace
