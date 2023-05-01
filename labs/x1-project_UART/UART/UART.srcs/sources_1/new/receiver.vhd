@@ -18,8 +18,7 @@ entity receiver is -- reciever
   Port (
         clk : in std_logic;
         clk_baud : in std_logic;
-        rst : in std_logic;  
-        --stop_bit : in std_logic;
+        rst : in std_logic;          
         par_bit_t : in std_logic;               
         par_bit : in std_logic;       
         Rx_data : in std_logic;        
@@ -33,50 +32,42 @@ end receiver;
 architecture Behavioral of receiver is
 
     signal frame : std_logic_vector(7 downto 0) := (others => '0');    
-    signal clk_bits : integer range 0 to 9 := 0;    
-    signal sig_clk_baud : std_logic;    
+    signal cnt_bits : integer range 0 to 9 := 0; 
     signal data_busy : std_logic := '0';    
-    signal end_bit : std_logic := '0';    
+    signal end_bit : std_logic := '0'; 
+    signal sig_Rx_in : std_logic;      
     signal dat_led : natural := 0;
     shared variable i : integer:= 0;
     shared variable y : integer:= 0;
 
 begin 
-    inside : process(clk, sig_clk_baud) is
+    inside : process(clk_baud) is
     begin
-    if (rising_edge(clk)) then
-    if (sig_clk_baud = '1') then
-        if (Rx_data = '0' and data_busy = '0') then
-                data_busy <= '1';
-                end_bit <= '0';
-                clk_bits <= 0;
-        elsif (data_busy = '1') then
-                if (Rx_en = '1') then
-                        if (clk_bits < g_CNT_MAX) then
-                            frame(clk_bits) <= Rx_data;
-                            clk_bits <= clk_bits + 1;
-                        elsif (clk_bits = g_CNT_MAX) then
+    if (rising_edge(clk_baud)) then       
+        if (Rx_en = '1' and Rx_data = '0' and data_busy = '0') then
+                data_busy <= '1';                              
+        elsif (Rx_en = '1' and data_busy = '1') then 
+                        end_bit <= '0'; 
+                        cnt_bits <= 0;               
+                        if (cnt_bits < g_CNT_MAX) then
+                            frame(cnt_bits) <= Rx_data;                            
+                            cnt_bits <= cnt_bits + 1;
+                        elsif (cnt_bits = g_CNT_MAX) then
                             in_parity <= Rx_data;
-                            clk_bits <= clk_bits + 1;
-                        elsif (clk_bits = g_PARITY) then
-                            end_bit <= Rx_data;
-                            in_parity <= Rx_data;
-                            clk_bits <= clk_bits + 1;
+                            cnt_bits <= cnt_bits + 1;
+                        elsif (cnt_bits = g_PARITY) then
+                            end_bit <= '1';                            
+                            cnt_bits <= 0;                                      
                             data_busy <= '0';
-                        else                                                        
-                            data_busy <= '0';
-                        end if;
-                end if;
+                        end if;                
              end if;
-         end if;
-       end if;
+         end if;                
      end process inside;
      
      --calculated parity
-     P_parity : process(clk, sig_clk_baud) is
+     P_parity : process(clk_baud) is
          begin
-             if (rising_edge(clk)) then
-                if (sig_clk_baud = '1') then
+             if (rising_edge(clk_baud)) then
                     if (par_bit = '1') then
                         i:= 0;
                         y:= 0;
@@ -99,17 +90,14 @@ begin
                         end if;                    
                     end if;
                 end if;
-              end if;
      end process P_parity;
      
-     P_led : process(clk, sig_clk_baud) is
+     P_led : process(clk_baud) is
      begin
-         if (rising_edge(clk)) then
-            if (sig_clk_baud = '1') then
-                if (end_bit = '1') then
-                    led_bytes <= frame; 
-                end if;
-            end if;
-          end if;
+        if (rising_edge(clk_baud)) then
+             if (end_bit = '1') then
+               led_bytes <= frame; 
+             end if;
+        end if;
      end process P_led;
 end Behavioral;

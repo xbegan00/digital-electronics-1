@@ -14,6 +14,8 @@ architecture testbench of tb_top is
   constant c_CLK_100MHZ_PERIOD : time    := 10 ns;
   -- Local signals
   signal sig_clk_100mhz : std_logic;
+  signal sig_clk_100mhz_t : std_logic;
+  
   signal sig_rst        : std_logic;
   signal sig_clk_baud   : std_logic;
   signal sig_baud_sw    : std_logic_vector(2 downto 0);
