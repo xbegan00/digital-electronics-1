@@ -5,7 +5,7 @@ entity top is --TOP of Program
 Port ( 
    CLK100MHZ : in STD_LOGIC;
    SW : in STD_LOGIC_VECTOR (15 downto 0);
-   LED : in STD_LOGIC_VECTOR (15 downto 0);
+   LED : out STD_LOGIC_VECTOR (15 downto 0);
    CA : out STD_LOGIC;
    CB : out STD_LOGIC;
    CC : out STD_LOGIC;
@@ -17,11 +17,7 @@ Port (
    JA : out STD_LOGIC; --TX
    JB : in STD_LOGIC; --RX
    AN : out STD_LOGIC_VECTOR (7 downto 0);
-   BTNC : in STD_LOGIC;
-   BTNU : in STD_LOGIC;
-   BTND : in STD_LOGIC;
-   BTNR : in STD_LOGIC;
-   BTNL : in STD_LOGIC
+   BTNC : in STD_LOGIC
    );
 end top;
 
@@ -38,7 +34,7 @@ architecture Behavioral of top is
   signal sig_data5       : STD_LOGIC_VECTOR (3 downto 0);
   signal sig_data6       : STD_LOGIC_VECTOR (3 downto 0);
   signal sig_data7       : STD_LOGIC_VECTOR (3 downto 0); 
-  signal sig_frame_width     : STD_LOGIC_VECTOR (3 downto 0); 
+  signal sig_frame_led     : STD_LOGIC_VECTOR (7 downto 0); 
   signal sig_en_250ms : std_logic;
   
 begin
@@ -105,13 +101,26 @@ begin
             par_bit_t => SW(8),                 --type of parity (even, odd)
             par_bit => SW(9),                   --add par bit to packet
             clk_baud => sig_clk_baud,           --clk signal from baud
-            Rx_en => SW(10)                     --start or stop transmitt
-            --stop_bit => SW(12)                --1 or 2 stop bits                         
+            Rx_en => SW(10),                    --start or stop transmitt
+            led_bytes(0) => LED(0),
+            led_bytes(1) => LED(1),
+            led_bytes(2) => LED(2),
+            led_bytes(3) => LED(3),
+            led_bytes(4) => LED(4),
+            led_bytes(5) => LED(5),
+            led_bytes(6) => LED(6),
+            led_bytes(7) => LED(7)                      
          ); 
-     p_settings : process (CLK100MHZ) is        --options with buttons
+     P_settings : process (CLK100MHZ) is        --options with buttons
      begin
      
-        if (rising_edge(CLK100MHZ)) then   
+        if (rising_edge(CLK100MHZ)) then 
+            LED(9) <= SW(9);
+            LED(10) <= SW(10);
+            LED(11) <= SW(11);
+            LED(13) <= SW(13);
+            LED(14) <= SW(14);
+            LED(15) <= SW(15);  
             sig_data7 <= "1000";
             if (SW(12) = '1') then
                 sig_data6 <= "0010";

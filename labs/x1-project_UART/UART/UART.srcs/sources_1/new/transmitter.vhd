@@ -41,7 +41,7 @@ begin
     P_Transmitting : process (clk, clk_baud) is
     begin
       if (rising_edge(clk)) then
-        if (rising_edge(clk_baud)) then
+        if (clk_baud = '1') then
             if (rst = '1') then
                 sig_rst <= '1';              
             if (Tx_en = '1') then

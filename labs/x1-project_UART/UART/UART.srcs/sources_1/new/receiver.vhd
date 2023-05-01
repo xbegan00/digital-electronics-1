@@ -45,7 +45,7 @@ begin
     inside : process(clk, sig_clk_baud) is
     begin
     if (rising_edge(clk)) then
-    if (rising_edge(sig_clk_baud)) then
+    if (sig_clk_baud = '1') then
         if (Rx_data = '0' and data_busy = '0') then
                 data_busy <= '1';
                 end_bit <= '0';
@@ -76,7 +76,7 @@ begin
      P_parity : process(clk, sig_clk_baud) is
          begin
              if (rising_edge(clk)) then
-                if (rising_edge(sig_clk_baud)) then
+                if (sig_clk_baud = '1') then
                     if (par_bit = '1') then
                         i:= 0;
                         y:= 0;
@@ -105,7 +105,7 @@ begin
      P_led : process(clk, sig_clk_baud) is
      begin
          if (rising_edge(clk)) then
-            if (rising_edge(sig_clk_baud)) then
+            if (sig_clk_baud = '1') then
                 if (end_bit = '1') then
                     led_bytes <= frame; 
                 end if;
