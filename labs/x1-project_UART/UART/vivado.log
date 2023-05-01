@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2020.2 (64-bit)
+# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
+# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+# Start of session at: Mon May  1 20:30:31 2023
+# Process ID: 72872
+# Current directory: E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/x1-project_UART/UART
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent79060 E:\SCHOOL\2022-2023\LETNY SEMESTER\BPC-DE1\PC\digital-electronics-1-main\labs\x1-project_UART\UART\UART.xpr
+# Log file: E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/x1-project_UART/UART/vivado.log
+# Journal file: E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/x1-project_UART/UART\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project {E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/x1-project_UART/UART/UART.xpr}
+INFO: [ProjectBase 1-489] The host OS only allows 260 characters in a normal path. The project is stored in a path with more than 80 characters. If you experience issues with IP, Block Designs, or files not being found, please consider moving the project to a location with a shorter path. Alternately consider using the OS subst command to map part of the path to a drive letter.
+Current project path is 'E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/x1-project_UART/UART'
+WARNING: [filemgmt 56-3] Default IP Output Path : Could not find the directory 'E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/x1-project_UART/UART/UART.gen/sources_1'.
+Scanning sources...
+Finished scanning sources
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository 'C:/Xilinx/Vivado/2020.2/data/ip'.
+update_compile_order -fileset sources_1
+exit
+INFO: [Common 17-206] Exiting Vivado at Mon May  1 20:35:50 2023...

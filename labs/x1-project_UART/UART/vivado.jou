@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2020.2 (64-bit)
+# SW Build 3064766 on Wed Nov 18 09:12:45 MST 2020
+# IP Build 3064653 on Wed Nov 18 14:17:31 MST 2020
+# Start of session at: Mon May  1 20:30:31 2023
+# Process ID: 72872
+# Current directory: E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/x1-project_UART/UART
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent79060 E:\SCHOOL\2022-2023\LETNY SEMESTER\BPC-DE1\PC\digital-electronics-1-main\labs\x1-project_UART\UART\UART.xpr
+# Log file: E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/x1-project_UART/UART/vivado.log
+# Journal file: E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/x1-project_UART/UART\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project {E:/SCHOOL/2022-2023/LETNY SEMESTER/BPC-DE1/PC/digital-electronics-1-main/labs/x1-project_UART/UART/UART.xpr}
+update_compile_order -fileset sources_1
