@@ -2,26 +2,27 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity top is --TOP of Program
-Port ( CLK100MHZ : in STD_LOGIC;
-           SW : in STD_LOGIC_VECTOR (15 downto 0);
-           LED : in STD_LOGIC_VECTOR (15 downto 0);
-           CA : out STD_LOGIC;
-           CB : out STD_LOGIC;
-           CC : out STD_LOGIC;
-           CD : out STD_LOGIC;
-           CE : out STD_LOGIC;
-           CF : out STD_LOGIC;
-           CG : out STD_LOGIC;
-           DP : out STD_LOGIC;
-           JA : out STD_LOGIC; --TX
-           JB : out STD_LOGIC; --RX
-           AN : out STD_LOGIC_VECTOR (7 downto 0);
-           BTNC : in STD_LOGIC;
-           BTNU : in STD_LOGIC;
-           BTND : in STD_LOGIC;
-           BTNR : in STD_LOGIC;
-           BTNL : in STD_LOGIC
-           );
+Port ( 
+   CLK100MHZ : in STD_LOGIC;
+   SW : in STD_LOGIC_VECTOR (15 downto 0);
+   LED : in STD_LOGIC_VECTOR (15 downto 0);
+   CA : out STD_LOGIC;
+   CB : out STD_LOGIC;
+   CC : out STD_LOGIC;
+   CD : out STD_LOGIC;
+   CE : out STD_LOGIC;
+   CF : out STD_LOGIC;
+   CG : out STD_LOGIC;
+   DP : out STD_LOGIC;
+   JA : out STD_LOGIC; --TX
+   JB : in STD_LOGIC; --RX
+   AN : out STD_LOGIC_VECTOR (7 downto 0);
+   BTNC : in STD_LOGIC;
+   BTNU : in STD_LOGIC;
+   BTND : in STD_LOGIC;
+   BTNR : in STD_LOGIC;
+   BTNL : in STD_LOGIC
+   );
 end top;
 
 architecture Behavioral of top is
@@ -82,56 +83,48 @@ begin
           g_CNT_MAX => 8         
          )
          port map( 
+            clk => CLK100MHZ,
             rst => BTNC,
-            Tx_data => SW(7 downto 0),              --always 8bits
-            --par_bit_t => sig_bit_t,                 --type of parity (even, odd)
-            --par_bit => SW(11),                      --add par bit to packet
-            clk_baud => sig_clk_baud,               --clk signal from baud
-            Tx_en => SW(10),                        --start or stop transmitt
-            --stop_bit => SW(12),                    --1 or 2 stop bits
-            Tx_out => JA                      -- completed packet to send               
-         );     
-     clk_en1 : entity work.clock_enable
-         generic map(
-          g_MAX => 25000000          
+            Tx_data => SW(7 downto 0),          --always 8bits
+            par_bit_t => sig_bit_t,             --type of parity (even, odd)
+            par_bit => SW(11),                  --add par bit to packet
+            clk_baud => sig_clk_baud,           --clk signal from baud
+            Tx_en => SW(10),                    --start or stop transmitt
+            stop_bit => SW(12),                 --1 or 2 stop bits
+            Tx_out => JA                        -- completed packet to send               
+         );    
+    receiver : entity work.receiver 
+        generic map(
+          g_CNT_MAX => 8,                       --! Default number of frame bits  
+          g_PARITY => 9                         --! Default number for parity                
          )
          port map( 
-            rst => BTNC,
             clk => CLK100MHZ,
-            ce  => sig_en_250ms
+            rst => BTNC,
+            Rx_data => JB,                      --always 8bits
+            par_bit_t => SW(8),                 --type of parity (even, odd)
+            par_bit => SW(9),                   --add par bit to packet
+            clk_baud => sig_clk_baud,           --clk signal from baud
+            Rx_en => SW(10)                     --start or stop transmitt
+            --stop_bit => SW(12)                --1 or 2 stop bits                         
          ); 
-     p_settings : process (CLK100MHZ) is --options with buttons
+     p_settings : process (CLK100MHZ) is        --options with buttons
      begin
      
-        if (rising_edge(CLK100MHZ)) then
-            sig_bit_t <= '0';
-            sig_data5 <= "0000";
-            sig_data7 <= "1001";
+        if (rising_edge(CLK100MHZ)) then   
+            sig_data7 <= "1000";
             if (SW(12) = '1') then
                 sig_data6 <= "0010";
             elsif (SW(12) = '0') then
                 sig_data6 <= "0001";
             end if;
-            if (SW(11) = '1') then
-                sig_data5 <= "0001";
-            elsif (SW(12) = '0') then
-                sig_data5 <= "0000";
-            end if;
-            if (BTNC = '0') then
-                if (BTNU = '1') then
-                    sig_bit_t <= '1';
-                end if;
-                if (BTND = '1') then
-                    sig_bit_t <= '0';
-                end if;
-                if (BTNR = '1') then
-                    sig_bit_t <= '1';
-                end if;
-                if (BTNL = '1') then
-                    sig_bit_t <= '0';
+            if (SW(9) = '1') then
+                if (SW(8) = '1') then
+                    sig_data5 <= "1110";
+                elsif (SW(8) = '0') then
+                    sig_data5 <= "1111";
                 end if;
             end if;
         end if;
-     end process p_settings;
-    --XA_N <= '0';
+     end process p_settings;  
 end Behavioral;

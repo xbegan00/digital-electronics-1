@@ -1,11 +1,3 @@
--- This block uses code from clock_enable as a pulse generator for other blocks (RX/TX).
--- It sends out a pulse every //baud_gen// clock pulses. 
-
--- Example: baud_gen = 4800 ? p_clk_enable rises sig_cnt every cycle until sig_cnt >= baud_gen - 1
--- Then it sends out a pulse that is one clock long and resets sig_cnt to 0. 
--- That output pulse is fed into RX/TX blocks and tells those blocks to receive/transmit.
-
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 use ieee.numeric_std.all; -- Package for arithmetic operations
@@ -26,9 +18,9 @@ end clk_baud;
 
 architecture behavioral of clk_baud is
    --Local signal for storing baud rate
-  signal baud_gen : integer;
+  signal baud_gen : integer:= 0;
    -- Local counter
-  signal sig_cnt : natural;
+  signal sig_cnt : natural:= 0;
   
 begin
 
@@ -37,42 +29,48 @@ begin
         if rising_edge(clk) then              -- Synchronous process  
                 case baud_sw is
                     when "000" =>
-                        baud_gen <= 20833;   --4800
+                        --baud_gen <= 20833;   --4800
+                        baud_gen <= 1;   --testbench
                         data0 <= "0000";
                         data1 <= "0000";
                         data2 <= "1000";
                         data3 <= "0100";
                         data4 <= "0000";
                     when "001" =>
-                        baud_gen <= 10417;   --9600
+                        --baud_gen <= 10417;   --9600
+                        baud_gen <= 2;   --testbench
                         data0 <= "0000";
                         data1 <= "0000";
                         data2 <= "0110";
                         data3 <= "1001";
                         data4 <= "0000";
                     when "010" =>
-                        baud_gen <= 6944;    --14400
+                        --baud_gen <= 6944;    --14400
+                        baud_gen <= 3;   --testbench
                         data0 <= "0000";
                         data1 <= "0000";
                         data2 <= "0100";
                         data3 <= "0100";
                         data4 <= "0001";
                     when "011" =>
-                        baud_gen <= 5208;    --19200
+                        --baud_gen <= 5208;    --19200
+                        baud_gen <= 4;   --testbench
                         data0 <= "0000";
                         data1 <= "0000";
                         data2 <= "0010";
                         data3 <= "1001";
                         data4 <= "0001";
                     when "100" =>            
-                        baud_gen <= 3472;    --28800
+                        --baud_gen <= 3472;    --28800
+                        baud_gen <= 5;   --testbench
                         data0 <= "0000";
                         data1 <= "0000";
                         data2 <= "1000";
                         data3 <= "1000";
                         data4 <= "0010";
                     when "101" =>
-                        baud_gen <= 2604;    --38400
+                        --baud_gen <= 2604;    --38400
+                        baud_gen <= 6;   --testbench
                         data0 <= "0000";
                         data1 <= "0000";
                         data2 <= "0100";
@@ -80,6 +78,7 @@ begin
                         data4 <= "0011";
                     when "110" =>
                         baud_gen <= 1736;    --57600
+                        baud_gen <= 7;   --testbench
                         data0 <= "0000";
                         data1 <= "0000";
                         data2 <= "0110";
@@ -87,13 +86,15 @@ begin
                         data4 <= "0101";
                     when "111" =>
                         baud_gen <= 868;     --115200
+                        baud_gen <= 8;   --testbench
                         data0 <= "0000";
                         data1 <= "0000";
                         data2 <= "0010";
                         data3 <= "0101";
                         data4 <= "1011";
                     when others =>
-                        baud_gen <= 20833;   --4800
+                        --baud_gen <= 20833;   --4800
+                        baud_gen <= 9;   --testbench
                         data0 <= "0000";
                         data1 <= "0000";
                         data2 <= "1000";
@@ -132,6 +133,5 @@ begin
       end if;
     end if;
 
-  end process p_clk_enable;
-  
+  end process p_clk_enable;  
 end Behavioral;
