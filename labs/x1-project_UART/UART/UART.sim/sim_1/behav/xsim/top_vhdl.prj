@@ -1,0 +1,12 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../UART.srcs/sources_1/new/clk_baud.vhd" \
+"../../../../UART.srcs/sources_1/new/clock_enable.vhd" \
+"../../../../UART.srcs/sources_1/new/cnt_up_down.vhd" \
+"../../../../UART.srcs/sources_1/new/hex_7seg.vhd" \
+"../../../../UART.srcs/sources_1/new/driver_7seg_8digits.vhd" \
+"../../../../UART.srcs/sources_1/new/transmitter.vhd" \
+"../../../../UART.srcs/sources_1/new/top.vhd" \
+
+# Do not sort compile order
+nosort
