@@ -14,8 +14,8 @@ Port (
    CF : out STD_LOGIC;
    CG : out STD_LOGIC;
    DP : out STD_LOGIC;
-   JA : out STD_LOGIC; --TX
-   JB : in STD_LOGIC; --RX
+   XA_T : out STD_LOGIC; --TX
+   XA_R : in STD_LOGIC; --RX
    AN : out STD_LOGIC_VECTOR (7 downto 0);
    BTNC : in STD_LOGIC
    );
@@ -82,12 +82,12 @@ begin
             clk => CLK100MHZ,
             rst => BTNC,
             Tx_data => SW(7 downto 0),          --always 8bits
-            par_bit_t => sig_bit_t,             --type of parity (even, odd)
-            par_bit => SW(11),                  --add par bit to packet
+            par_bit_t => SW(8),             --type of parity (even, odd)
+            par_bit => SW(9),                  --add par bit to packet
             clk_baud => sig_clk_baud,           --clk signal from baud
-            Tx_en => SW(10),                    --start or stop transmitt
+            Tx_en => SW(11),                    --start or stop transmitt
             stop_bit => SW(12),                 --1 or 2 stop bits
-            Tx_out => JA                        -- completed packet to send               
+            Tx_out => XA_T                        -- completed packet to send               
          );    
     receiver : entity work.receiver 
         generic map(
@@ -97,7 +97,7 @@ begin
          port map( 
             clk => CLK100MHZ,
             rst => BTNC,
-            Rx_data => JB,                      --always 8bits
+            Rx_data => XA_R,                      --always 8bits
             par_bit_t => SW(8),                 --type of parity (even, odd)
             par_bit => SW(9),                   --add par bit to packet
             clk_baud => sig_clk_baud,           --clk signal from baud
