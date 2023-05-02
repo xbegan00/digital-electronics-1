@@ -43,23 +43,31 @@ architecture Behavioral of receiver is
 begin 
     inside : process(clk_baud) is
     begin
-    if (rising_edge(clk_baud)) then       
-        if (Rx_en = '1' and Rx_data = '0' and data_busy = '0') then
-                data_busy <= '1';                              
-        elsif (Rx_en = '1' and data_busy = '1') then 
-                        end_bit <= '0'; 
-                        cnt_bits <= 0;               
-                        if (cnt_bits < g_CNT_MAX) then
-                            frame(cnt_bits) <= Rx_data;                            
-                            cnt_bits <= cnt_bits + 1;
-                        elsif (cnt_bits = g_CNT_MAX) then
-                            in_parity <= Rx_data;
-                            cnt_bits <= cnt_bits + 1;
-                        elsif (cnt_bits = g_PARITY) then
-                            end_bit <= '1';                            
-                            cnt_bits <= 0;                                      
-                            data_busy <= '0';
-                        end if;                
+    if (rising_edge(clk_baud)) then 
+        if (rst = '1') then
+            cnt_bits <= 0;
+            data_busy <= '0';
+            frame <= "00000000";
+            end_bit <= '0';
+        else
+        
+            if (Rx_en = '1' and Rx_data = '0' and data_busy = '0') then
+                    data_busy <= '1';                              
+            elsif (Rx_en = '1' and data_busy = '1') then 
+                            end_bit <= '0'; 
+                            cnt_bits <= 0;               
+                            if (cnt_bits < g_CNT_MAX) then
+                                frame(cnt_bits) <= Rx_data;                            
+                                cnt_bits <= cnt_bits + 1;
+                            elsif (cnt_bits = g_CNT_MAX) then
+                                in_parity <= Rx_data;
+                                cnt_bits <= cnt_bits + 1;
+                            elsif (cnt_bits = g_PARITY) then
+                                end_bit <= '1';                            
+                                cnt_bits <= 0;                                      
+                                data_busy <= '0';
+                            end if;     
+                      end if;           
              end if;
          end if;                
      end process inside;
@@ -95,9 +103,14 @@ begin
      P_led : process(clk_baud) is
      begin
         if (rising_edge(clk_baud)) then
-             if (end_bit = '1') then
-               led_bytes <= frame; 
-             end if;
+             if (rst = '1') then
+                led_bytes <= "00000000";
+             else
+             
+                 if (end_bit = '1') then
+                   led_bytes <= frame; 
+                 end if;
+            end if;
         end if;
      end process P_led;
 end Behavioral;

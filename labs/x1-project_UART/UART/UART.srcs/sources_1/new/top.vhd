@@ -6,6 +6,12 @@ Port (
    CLK100MHZ : in STD_LOGIC;
    SW : in STD_LOGIC_VECTOR (15 downto 0);
    LED : out STD_LOGIC_VECTOR (15 downto 0);
+   LED16_R : out STD_LOGIC;
+   LED16_G : out STD_LOGIC;
+   LED16_B : out STD_LOGIC;
+   LED17_R : out STD_LOGIC;
+   LED17_G : out STD_LOGIC;
+   LED17_B : out STD_LOGIC;   
    CA : out STD_LOGIC;
    CB : out STD_LOGIC;
    CC : out STD_LOGIC;
@@ -25,7 +31,7 @@ architecture Behavioral of top is
   signal sig_clk       : std_logic;
   signal sig_clk_baud  : std_logic;
   signal sig_rst       : std_logic;
-  signal sig_bit_t       : std_logic;
+  -- signal sig_bit_t       : std_logic;
   signal sig_data0     : STD_LOGIC_VECTOR (3 downto 0);
   signal sig_data1      : STD_LOGIC_VECTOR (3 downto 0);
   signal sig_data2       : STD_LOGIC_VECTOR (3 downto 0);
@@ -36,6 +42,8 @@ architecture Behavioral of top is
   signal sig_data7       : STD_LOGIC_VECTOR (3 downto 0); 
   signal sig_frame_led     : STD_LOGIC_VECTOR (7 downto 0); 
   signal sig_en_250ms : std_logic;
+  signal sig_parity : std_logic;
+  signal sig_in_parity : std_logic;
   
 begin
 
@@ -101,7 +109,9 @@ begin
             par_bit_t => SW(8),                 --type of parity (even, odd)
             par_bit => SW(9),                   --add par bit to packet
             clk_baud => sig_clk_baud,           --clk signal from baud
-            Rx_en => SW(10),                    --start or stop transmitt
+            Rx_en => SW(10),
+            parity => sig_parity, 
+            in_parity => sig_in_parity,                               
             led_bytes(0) => LED(0),
             led_bytes(1) => LED(1),
             led_bytes(2) => LED(2),
@@ -128,11 +138,29 @@ begin
                 sig_data6 <= "0001";
             end if;
             if (SW(9) = '1') then
-                if (SW(8) = '1') then
+                if (SW(8) = '0') then
                     sig_data5 <= "1110";
-                elsif (SW(8) = '0') then
+                elsif (SW(8) = '1') then
                     sig_data5 <= "1111";
                 end if;
+            end if;
+            if(sig_in_parity = '1') then
+                LED16_R <= '0'; 
+                LED16_G <= '1';
+                LED16_B <= '0';
+            elsif (sig_in_parity = '0') then
+                LED16_R <= '1'; 
+                LED16_G <= '0';
+                LED16_B <= '0';
+            end if;
+            if(sig_parity = '1') then
+                LED17_R <= '0'; 
+                LED17_G <= '1';
+                LED17_B <= '0';
+            elsif (sig_parity = '0') then
+                LED17_R <= '1'; 
+                LED17_G <= '0';
+                LED17_B <= '0';
             end if;
         end if;
      end process p_settings;  
